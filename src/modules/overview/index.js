@@ -61,19 +61,19 @@ var service = {
 	_fetchResources: function (client) {
 		return client.getText(selectors.woodCount)
 			.then(function (count) {
-				status.resources.wood = parseInt(count);
+				status.resources.wood = parseInt(count.replace('.', ''));
 			})
 			.getText(selectors.briksCount)
 			.then(function (count) {
-				status.resources.briks = parseInt(count);
+				status.resources.briks = parseInt(count.replace('.', ''));
 			})
 			.getText(selectors.stoneCount)
 			.then(function (count) {
-				status.resources.stone = parseInt(count);
+				status.resources.stone = parseInt(count.replace('.', ''));
 			})
 			.getText(selectors.foodCount)
 			.then(function (count) {
-				status.resources.food = parseInt(count);
+				status.resources.food = parseInt(count.replace('.', ''));
 			})
 	},
 	_fetchAvailableBuildingsCount: function (client) {

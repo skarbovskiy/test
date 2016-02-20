@@ -47,15 +47,7 @@ var service = {
 				} else {
 					promise = client.click(selectors.resourcesLink);
 				}
-				return promise
-					.waitUntil(function () {
-						return new Promise(function (resolve, reject) {
-							setTimeout(function () {
-								console.log('resolving')
-								resolve();
-							}, 3000);
-						})
-					})
+				return promise.waitForVisible(building.selector, 5000)
 					.click(building.selector)
 					.click(selectors.buildButton)
 					.click(selectors.resourcesLink);
