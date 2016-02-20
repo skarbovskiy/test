@@ -48,13 +48,12 @@ var service = {
 		return client.click(selectors.goldMenu)
 			.waitForVisible(selectors.plusTab, 10000)
 			.click(selectors.plusTab)
-			.waitForVisible(selectors.plusTabContent)
+			.waitForVisible(selectors.plusTabContent, 10000)
 			.getText(selectors.plusRemainingTime)
 			.then(function (c) {
 				status.plusActivated = true;
 			})
 			.catch(function (e) {
-				console.log('debug plus status', e.stack);
 				status.plusActivated = false;
 			})
 			.click(selectors.plusClose);

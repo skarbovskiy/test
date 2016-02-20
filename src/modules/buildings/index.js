@@ -57,6 +57,7 @@ var service = {
 	},
 	_getInfrastructureAvailableBuildings: function (client, stats) {
 		return client.click(selectors.villageCenterLink)
+			.waitForVisible('.playerName')
 			.then(function () {
 				return buildObject(client, stats, 'infrastructure');
 			});
