@@ -17,7 +17,7 @@ module.exports = function () {
 	return client.init()
 		.url(config.account.server.url)
 		.timeouts('script', 5000)
-		.timeouts('implicit', 5000)
+		.timeouts('implicit', 100)
 		.timeouts('page load', 30000)
 		.title()
 		.then(function(res) {
