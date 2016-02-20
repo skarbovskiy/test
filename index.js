@@ -17,6 +17,10 @@ function errorHandler (e) {
 }
 
 process.on('uncaughtException', errorHandler);
+process.on('SIGTERM', function () {
+  client.end();
+  process.exit(0);
+});
 
 client.catch(errorHandler);
 var globalStats = null;
