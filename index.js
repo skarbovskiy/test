@@ -6,11 +6,19 @@ var overview = require('./src/modules/overview');
 var buildings = require('./src/modules/buildings');
 
 var client = init();
-client.catch(function (e) {
+
+function errorHandler (e) {
 	console.log(e.stack);
-	client.end();
-	process.exit(1);
-});
+	client.saveScreenshot('./snapshot.png')
+		.then(function () {
+			client.end();
+			process.exit(1);
+		})
+}
+
+process.on('uncaughtException', errorHandler);
+
+client.catch(errorHandler);
 var globalStats = null;
 
 main();
@@ -22,11 +30,7 @@ function main () {
 			globalStats = stats;
 		})
 		.then(doBuilding)
-		.catch(function (e) {
-			console.log(e.stack);
-			client.end();
-			process.exit(1);
-		})
+		.catch(errorHandler)
 		.delay(5* 60 * 1000)//5 min
 		.then(main)
 }
