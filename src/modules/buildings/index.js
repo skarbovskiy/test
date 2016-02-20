@@ -45,10 +45,13 @@ var service = {
 				if (building.type === 'infrastructure') {
 					promise = client.click(selectors.villageCenterLink);
 				} else {
-					promise = client.click(selectors.resourcesLink);
+					promise = client.click(selectors.resourcesLink).waitForVisible('table#production', 5000);
 				}
 				return promise.waitForVisible(building.selector, 5000)
-					.click(building.selector)
+					.execute(function (sc){
+						return $$(sc)[0].click();
+					}, building.selector)
+					.waitForVisible(selectors.buildButton, 5000)
 					.click(selectors.buildButton)
 					.click(selectors.resourcesLink);
 			});
