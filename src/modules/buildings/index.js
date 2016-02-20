@@ -48,6 +48,7 @@ var service = {
 					promise = client.click(selectors.resourcesLink);
 				}
 				return promise.click(building.selector)
+					.waitForVisible(selectors.buildButton)
 					.click(selectors.buildButton)
 					.click(selectors.resourcesLink);
 			});
