@@ -48,7 +48,7 @@ var service = {
 					promise = client.click(selectors.resourcesLink);
 				}
 				return promise.click(building.selector)
-					.waitForVisible(selectors.buildButton)
+					.waitForVisible(selectors.buildButton, 5000)
 					.click(selectors.buildButton)
 					.click(selectors.resourcesLink);
 			});
@@ -58,7 +58,7 @@ var service = {
 	},
 	_getInfrastructureAvailableBuildings: function (client, stats) {
 		return client.click(selectors.villageCenterLink)
-			.waitForVisible('.playerName')
+			.waitForVisible('.playerName', 5000)
 			.then(function () {
 				return buildObject(client, stats, 'infrastructure');
 			});
@@ -72,7 +72,7 @@ function buildObject (client, stats, type) {
 			return Promise.map(e.value, function (element) {
 				i++;
 				var selector = selectors.mapElement + ':nth-child(' + i + ')';
-				return client.waitForVisible(selector)
+				return client.waitForVisible(selector, 5000)
 					.rightClick(selector)
 					.isVisible('.tip-contents .elementText .showCosts')
 					.then(function (buildable) {
