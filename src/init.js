@@ -19,7 +19,7 @@ module.exports = function () {
 		.timeouts('script', 5000)
 		.timeouts('implicit', 5000)
 		.timeouts('page load', 30000)
-		.then(callback);
+		.then(callback)
 		.title()
 		.then(function(res) {
 	  	assert(res.value === config.account.server.title, 'Wrong page title');
