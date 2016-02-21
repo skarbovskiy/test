@@ -81,26 +81,20 @@ function buildObject (client, stats, type) {
 						if (!buildable) {
 							return;
 						}
-						return client.isVisible('.tip-contents .elementText .notice')
-							.then(function (currentlyBuilding) {
-								if (currentlyBuilding) {
-									return;
-								}
-								return client.getHTML('.tip-contents .elementText .showCosts', false)
-									.then(function (html) {
-										var $ = cheerio.load(html);
-										buildableObjects.push({
-											selector: selector,
-											type: type,
-											resources: {
-												wood: parseInt($('.r1').text()),
-												briks: parseInt($('.r2').text()),
-												stone: parseInt($('.r3').text()),
-												food: parseInt($('.r4').text())
-											}
-										});
-									});
-							})
+						return client.getHTML('.tip-contents .elementText .showCosts', false)
+							.then(function (html) {
+								var $ = cheerio.load(html);
+								buildableObjects.push({
+									selector: selector,
+									type: type,
+									resources: {
+										wood: parseInt($('.r1').text()),
+										briks: parseInt($('.r2').text()),
+										stone: parseInt($('.r3').text()),
+										food: parseInt($('.r4').text())
+									}
+								});
+							});
 					})
 					.keys(['Escape']);
 			}, {concurrency: 1});
