@@ -52,9 +52,6 @@ function doBuilding () {
 	if (globalStats.buildingsAvailable > 0) {
 		console.log('trying to build');
 		return buildings.build(client, globalStats)
-			.then(function () {
-				globalStats.buildingsAvailable--;
-			})
 			.catch(function (e) {
 				if (e.message === 'not enough resources') {
 					console.log('not enough resources');
@@ -62,7 +59,6 @@ function doBuilding () {
 				} else {
 					throw e;
 				}
-			})
-			.then(doBuilding);
+			});
 	}
 }
