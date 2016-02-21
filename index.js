@@ -4,6 +4,7 @@ var webdriverio = require('webdriverio');
 var init = require('./src/init');
 var overview = require('./src/modules/overview');
 var buildings = require('./src/modules/buildings');
+var adventures = require('./src/modules/adventures');
 
 var client = init();
 
@@ -11,16 +12,16 @@ function errorHandler (e) {
 	console.log(e.stack);
 	client.saveScreenshot('./snapshot.png')
 		.then(function () {
-			client.end();
-			process.exit(1);
+			client.end()
+				.then(function () {
+					process.exit(1);
+				});
 		})
 }
 
 process.on('uncaughtException', errorHandler);
-process.on('SIGTERM', function () {
-  client.end();
-  process.exit(0);
-});
+process.on('SIGINT', errorHandler);
+process.on('SIGTERM', errorHandler);
 
 client.catch(errorHandler);
 var globalStats = null;
@@ -33,10 +34,18 @@ function main () {
 			console.log('stats:', stats);
 			globalStats = stats;
 		})
+		.then(doAdventures)
 		.then(doBuilding)
 		.catch(errorHandler)
-		.delay(5* 60 * 1000)//5 min
+		.delay(5 * 60 * 1000)//5 min
 		.then(main)
+}
+
+function doAdventures () {
+	if (globalStats.adventuresAvailable > 0) {
+		console.log('trying to adventure');
+		return adventures.process(client);
+	}
 }
 
 function doBuilding () {
