@@ -75,6 +75,7 @@ function buildObject (client, stats, type) {
 				i++;
 				var selector = selectors.mapElement + ':nth-child(' + i + ')';
 				return client.rightClick(selector)
+					.waitForVisible('.tip-contents .elementText', 5000)
 					.isVisible('.tip-contents .elementText .showCosts')
 					.then(function (buildable) {
 						if (!buildable) {
