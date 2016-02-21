@@ -10,9 +10,16 @@ var selectors = {
 var service = {
 	process: function (client) {
 		return client.click(selectors.adventureLink)
-			.click(selectors.adventureItem)
-			.click(selectors.startButton)
-			.click(selectors.mainPageLink);
+			.isVisible(selectors.adventureItem)
+				.then(function (visible) {
+					if (!visible) {
+						return;
+					}
+					return client.click(selectors.adventureItem)
+						.click(selectors.startButton)
+						.click(selectors.mainPageLink);
+				});
+
 	}
 };
 

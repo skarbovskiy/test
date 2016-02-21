@@ -45,7 +45,7 @@ var service = {
 				if (building.type === 'infrastructure') {
 					promise = client.click(selectors.villageCenterLink);
 				} else {
-					promise = client.click(selectors.resourcesLink).waitForVisible('table#production', 5000);
+					promise = client.click(selectors.resourcesLink);
 				}
 				return promise.waitForVisible(building.selector, 5000)
 					.execute(function (sc){
