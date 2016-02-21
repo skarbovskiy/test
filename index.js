@@ -9,12 +9,14 @@ var adventures = require('./src/modules/adventures');
 var client = init();
 
 function errorHandler (e) {
-	console.log(e.stack);
+	if (e) {
+		console.log(e e.stack);
+	}
 	client.saveScreenshot('./snapshot.png')
 		.then(function () {
 			client.end()
 				.then(function () {
-					process.exit(1);
+					process.exit(e ? 1: 0);
 				});
 		})
 }
