@@ -14,6 +14,7 @@ var buildableObjects = [];
 
 var service = {
 	build: function (client, stats) {
+		buildableObjects = [];
 		return service._getResourceAvailableBuildings(client, stats)
 			.then(service._getInfrastructureAvailableBuildings.bind(null, client, stats))
 			.then(function () {
