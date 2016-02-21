@@ -10,7 +10,7 @@ var client = init();
 
 function errorHandler (e) {
 	if (e) {
-		console.log(e e.stack);
+		console.log(e.stack);
 	}
 	client.saveScreenshot('./snapshot.png')
 		.then(function () {
