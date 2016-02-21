@@ -102,7 +102,7 @@ function buildObject (client, stats, type) {
 									});
 							})
 					})
-					.click('.playerName');
+					.keys(['Escape']);
 			}, {concurrency: 1});
 		})
 }
