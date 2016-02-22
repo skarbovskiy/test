@@ -26,7 +26,21 @@ module.exports = function () {
 		.setValue('form[name="login"] input[name="name"]', config.account.login)
 		.setValue('form[name="login"] input[name="password"]', config.account.password)
 		.submitForm('form[name="login"]')
-		.getText('.playerName')
+		.isVisible('#sysmsg')
+		.then(function (hasSystemMessage) {
+			var promise = null;
+			if (hasSystemMessage) {
+				promise = client.getHTML('#sysmsg')
+					.then(function (html) {
+						console.log(html);
+					})
+					.click('p a')
+					.getText('.playerName');
+			} else {
+				promise = client.getText('.playerName');
+			}
+			return promise;
+		})
 		.then(function (name) {
 			assert(name === config.account.login, 'main page didnot render');
 		})
