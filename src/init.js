@@ -21,8 +21,8 @@ module.exports = function () {
 		.timeouts('page load', 30000)
 		.title()
 		.then(function(res) {
-	  	assert(res.value === config.account.server.title, 'Wrong page title');
-	  })
+			assert(res.value === config.account.server.title, 'Wrong page title');
+		})
 		.setValue('form[name="login"] input[name="name"]', config.account.login)
 		.setValue('form[name="login"] input[name="password"]', config.account.password)
 		.submitForm('form[name="login"]')
