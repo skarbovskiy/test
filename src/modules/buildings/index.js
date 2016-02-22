@@ -3,6 +3,7 @@ var Promise = require('bluebird');
 var cheerio = require('cheerio');
 var _ = require('lodash');
 
+var config = require('../../../config').buildings;
 var selectors = {
 	mapElement: '#content map area',
 	villageCenterLink: 'li.villageBuildings a',
@@ -18,22 +19,27 @@ var service = {
 		return service._getResourceAvailableBuildings(client, stats)
 			.then(service._getInfrastructureAvailableBuildings.bind(null, client, stats))
 			.then(function () {
+
 				var buildIt = null;
-				_.some(_.sortBy(buildableObjects, ['resources.wood', 'resources.briks']), function (building) {
-					var res = building.resources;
-					var availableRes = stats.resources;
-					if (
-						res.wood <= availableRes.wood &&
-						res.briks <= availableRes.briks &&
-						res.stone <= availableRes.stone &&
-					  res.food <= availableRes.food
-					) {
-							buildIt = building;
-							return true;
+				buildableObjects = _.filter(buildableObjects, function (object) {
+					if (config.blackList && config.blackList.indexOf(object.title) > -1) {
+						return false;
 					}
-					return false;
+					return true;
 				});
-				return buildIt;
+				var priorityBuildingObjects = _.filter(buildableObjects, function (object) {
+					if (config.priority && config.priority.indexOf(object.title) > -1) {
+						return false;
+					}
+					return true;
+				});
+				if (priorityBuildingObjects && priorityBuildingObjects.length) {
+					buildIt = findBuildingToBuild(priorityBuildingObjects);
+				}
+				if (buildIt) {
+					return buildIt;
+				}
+				return findBuildingToBuild(buildableObjects);
 			})
 			.then(function (building) {
 				if (!building) {
@@ -82,10 +88,13 @@ function buildObject (client, stats, type) {
 						if (!buildable) {
 							return;
 						}
-						return client.getHTML('.tip-contents .elementText .showCosts', false)
+						return client.getHTML('.tip-contents', false)
 							.then(function (html) {
 								var $ = cheerio.load(html);
+								var title = $('.elementTitle').text();
+								title = title.substr(0, title.indexOf('Уровень') - 1);
 								buildableObjects.push({
+									title: title,
 									selector: selector,
 									type: type,
 									resources: {
@@ -100,6 +109,25 @@ function buildObject (client, stats, type) {
 					.keys(['Escape']);
 			}, {concurrency: 1});
 		})
+}
+
+function findBuildingToBuild (buildings) {
+	var result = null;
+	_.some(_.sortBy(buildings, ['resources.briks', 'resources.wood']), function (building) {
+		var res = building.resources;
+		var availableRes = stats.resources;
+		if (
+			res.wood <= (availableRes.wood - config.minResources.wood) &&
+			res.briks <= (availableRes.briks - config.minResources.briks) &&
+			res.stone <= (availableRes.stone - config.minResources.stone) &&
+			res.food <= (availableRes.food - config.minResources.food)
+		) {
+				result = building;
+				return true;
+		}
+		return false;
+	});
+	return result;
 }
 
 module.exports = service;
