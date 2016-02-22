@@ -40,6 +40,12 @@ var service = {
 						}, {concurrency: 1});
 					})
 					.then(function () {
+						if (!processed) {
+							return client.click('li.villageResources a')
+								.then(function () {
+									return processed;
+								})
+						}
 						return processed;
 					});
 	}
