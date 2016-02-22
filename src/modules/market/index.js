@@ -31,11 +31,18 @@ var service = {
 							if (bid !== 'Предложить' || silver >= 100) {
 								return;
 							}
-							processed = true;
-							console.log('making bid', title, silver);
 							return client.click(selector + ' .bid .bidButton')
-								.setValue('input.maxBid', 100)
-								.click('.submitBid .green')
+								.isVisible('input.maxBid')
+								.then(function (visible) {
+									processed = true;
+									if (!visible) {
+										return;
+									}
+									console.log('making bid', title, silver);
+									return client.setValue('input.maxBid', 100)
+									.click('.submitBid .green')
+
+								})
 							})
 						}, {concurrency: 1});
 					})
