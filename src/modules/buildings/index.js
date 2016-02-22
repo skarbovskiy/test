@@ -34,12 +34,12 @@ var service = {
 					return true;
 				});
 				if (priorityBuildingObjects && priorityBuildingObjects.length) {
-					buildIt = findBuildingToBuild(priorityBuildingObjects);
+					buildIt = findBuildingToBuild(priorityBuildingObjects, stats);
 				}
 				if (buildIt) {
 					return buildIt;
 				}
-				return findBuildingToBuild(buildableObjects);
+				return findBuildingToBuild(buildableObjects, stats);
 			})
 			.then(function (building) {
 				if (!building) {
@@ -111,7 +111,7 @@ function buildObject (client, stats, type) {
 		})
 }
 
-function findBuildingToBuild (buildings) {
+function findBuildingToBuild (buildings, stats) {
 	var result = null;
 	_.some(_.sortBy(buildings, ['resources.briks', 'resources.wood']), function (building) {
 		var res = building.resources;
