@@ -3,6 +3,8 @@ var Promise = require('bluebird');
 var _ = require('lodash');
 var cheerio = require('cheerio');
 
+var config = require('../../../config').market;
+
 var selectors = {
 	tableElement: '#auction table tbody tr'
 }
@@ -25,10 +27,13 @@ var service = {
 					return client.getHTML(selector, false)
 						.then(function (html) {
 							var $ = cheerio.load(html);
-							var title = $('.name').text().trim();
+							var object = $('.name').text().trim().split('×');
+							var title = object[1].trim();
+							var count = parseInt(object[0]);
+							var maxBid = config[title].bid * count;
 							var silver = parseInt($('.silver').text());
 							var bid = $('.bid').text().trim();
-							if (bid !== 'Предложить' || silver >= 100) {
+							if (bid !== 'Предложить' || silver >= maxBid) {
 								return;
 							}
 							return client.click(selector + ' .bid .bidButton')
@@ -38,8 +43,8 @@ var service = {
 									if (!visible) {
 										return;
 									}
-									console.log('making bid', title, silver);
-									return client.setValue('input.maxBid', 100)
+									console.log('making bid', title, count, maxBid);
+									return client.setValue('input.maxBid', maxBid)
 									.click('.submitBid .green')
 
 								})
