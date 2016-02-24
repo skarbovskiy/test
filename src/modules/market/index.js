@@ -27,13 +27,15 @@ var service = {
 					return client.getHTML(selector, false)
 						.then(function (html) {
 							var $ = cheerio.load(html);
-							var object = $('.name').text().trim().split('×');
+							var object = $('.name').text().replace(/	‎‭‭/g, '').trim().split('×‬‎');
 							var title = object[1].trim();
-							var count = parseInt(object[0]);
+							var count = parseInt(object[0].trim());
+							var maxBid = null;
 							if (!config[title]) {
+								maxBid = 80;
 								return;
 							}
-							var maxBid = config[title].bid * count;
+							maxBid = parseInt(config[title].bid * count);
 							var silver = parseInt($('.silver').text());
 							var bid = $('.bid').text().trim();
 							if (bid !== 'Предложить' || silver >= maxBid) {
