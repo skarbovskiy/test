@@ -29,9 +29,9 @@ var service = {
 				});
 				var priorityBuildingObjects = _.filter(buildableObjects, function (object) {
 					if (config.priority && config.priority.indexOf(object.title) > -1) {
-						return false;
+						return true;
 					}
-					return true;
+					return false;
 				});
 				if (priorityBuildingObjects && priorityBuildingObjects.length) {
 					buildIt = findBuildingToBuild(priorityBuildingObjects, stats);
