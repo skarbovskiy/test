@@ -30,6 +30,9 @@ var service = {
 							var object = $('.name').text().trim().split('×');
 							var title = object[1].trim();
 							var count = parseInt(object[0]);
+							if (!config[title]) {
+								return;
+							}
 							var maxBid = config[title].bid * count;
 							var silver = parseInt($('.silver').text());
 							var bid = $('.bid').text().trim();
